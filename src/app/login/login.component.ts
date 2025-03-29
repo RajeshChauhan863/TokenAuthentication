@@ -1,30 +1,61 @@
-import { Component } from '@angular/core';
-import { AuthService } from '../auth.service'; // Assuming you have an auth service
-import { Router } from '@angular/router';
+import { Component, OnInit } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { first } from 'rxjs/operators';
 
-@Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
-})
-export class LoginComponent {
-  username = '';
-  password = '';
+import { AuthenticationService } from '../auth.service';
 
-  constructor(private authService: AuthService, private router: Router) {}
+@Component({ templateUrl: 'login.component.html' })
+export class LoginComponent implements OnInit {
+    loginForm!: FormGroup;
+    loading = false;
+    submitted = false;
+    error = '';
 
-  onSubmit() {
-    this.authService.login(this.username, this.password)
-      .subscribe(
-        (response) => {
-          console.error('Login failed', response);
-          // Handle successful login (e.g., redirect to profile page)
-          this.router.navigate(['/profile']);
-        },
-        (error) => {
-          // Handle login error (e.g., display an error message)
-          console.error('Login failed', error);
+    constructor(
+        private formBuilder: FormBuilder,
+        private route: ActivatedRoute,
+        private router: Router,
+        private authenticationService: AuthenticationService
+    ) { 
+        // redirect to home if already logged in
+        if (this.authenticationService.userValue) { 
+            this.router.navigate(['/']);
         }
-      );
-  }
+    }
+
+    ngOnInit() {
+        this.loginForm = this.formBuilder.group({
+            username: ['', Validators.required],
+            password: ['', Validators.required]
+        });
+    }
+
+    // convenience getter for easy access to form fields
+    get f() { return this.loginForm.controls; }
+
+    onSubmit() {
+        this.submitted = true;
+
+        // stop here if form is invalid
+        if (this.loginForm.invalid) {
+            return;
+        }
+
+        this.error = '';
+        this.loading = true;
+        this.authenticationService.login(this.f['username'].value, this.f['password'].value)
+            .pipe(first())
+            .subscribe({
+                next: () => {
+                    // get return url from route parameters or default to '/'
+                    const returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+                    this.router.navigate([returnUrl]);
+                },
+                error: error => {
+                    this.error = error;
+                    this.loading = false;
+                }
+            });
+    }
 }
