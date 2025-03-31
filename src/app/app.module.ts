@@ -8,11 +8,13 @@ import { ProfileComponent } from './profile/profile.component';
 import { AuthenticationService } from './auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
+import { TravelComponent } from './travel/travel.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    ProfileComponent
+    ProfileComponent,
+    TravelComponent
   ],
   imports: [
     BrowserModule,
