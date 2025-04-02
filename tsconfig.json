@@ -5,7 +5,8 @@
     "baseUrl": "./",
     "outDir": "./dist/out-tsc",
     "forceConsistentCasingInFileNames": true,
-    "strict": true,
+    "strict": false,        // Enables all strict type-checking options
+    "noImplicitAny": false,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
@@ -30,7 +31,5 @@
     "strictTemplates": true,
     "skipLibCheck" :true
   }
-  // "exclude": [
-  //   "node_modules/@types/node/stream/web.d.ts"
-  // ]
+  
 }

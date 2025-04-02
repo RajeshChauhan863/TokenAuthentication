@@ -9,18 +9,26 @@ import { AuthenticationService } from './auth.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { TravelComponent } from './travel/travel.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { NguCarouselModule } from '@ngu/carousel';
+import { MiniComponent } from './travel/mini.component';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     ProfileComponent,
-    TravelComponent
+    TravelComponent,
+    MiniComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule,
+    NguCarouselModule
+  
   ],
   providers: [AuthenticationService],
   bootstrap: [AppComponent]
